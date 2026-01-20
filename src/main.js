@@ -2,24 +2,7 @@ import SubMain from "./subMain.js";
 export default class Main {
   constructor() {
     new SubMain();
-    this.employees = [
-    {
-        name: "John",
-        gender: "Male",
-        dob: "01/02/1988",
-        email: "john@example.com",
-        phone: "9898767514",
-        hobbies: ["Cricket"]
-    },
-    {
-        name: "Mary",
-        gender: "Female",
-        dob: "01/06/1988",
-        email: "mary@example.com",
-        phone: "9977541236",
-        hobbies: ["Cricket", "Chess"]
-    }
-  ];
+    this.employees = [];
     this.initializeForm();
   }
 
@@ -38,9 +21,6 @@ export default class Main {
     const phoneInput = document.getElementById("phone");
     const hobbyInputs = document.getElementsByClassName("hobby");
 
-    // block future dates (UI)
-    // const today = new Date().toISOString().split("T")[0];
-    // dobInput.max = today;
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -79,15 +59,7 @@ export default class Main {
         return;
       }
 
-      // DATE validation (logic level)
-      // const selectedDate = new Date(employeeData.dob);
-      // const currentDate = new Date();
-      // currentDate.setHours(0, 0, 0, 0);
 
-      // if (selectedDate > currentDate) {
-      //   alert("Future dates are not allowed");
-      //   return;
-      // }
 
       // STORE
       this.employees.push(employeeData);
@@ -109,7 +81,6 @@ export default class Main {
     const table = document.createElement("table");
     table.style.width = "80%";
     table.style.alignSelf="center";
-    // table.style.borderCollapse = "collapse";
 
     const headers = ["Name", "Gender", "DOB", "Email", "Phone", "Hobbies"];
     const thead = document.createElement("thead");
