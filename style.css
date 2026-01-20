@@ -1,0 +1,145 @@
+/*  RESET*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* CONTAINER  */
+.Employee {
+  width: 90%;
+  max-width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-headind {
+  text-align: center;
+  margin-bottom: 2%;
+  /* font-size: 1%; */
+}
+
+/* CARD  */
+.Employee-form-sec {
+  border: 2px solid #337ab7;
+  border-radius: 0.5%;
+}
+
+#Employee-form-sec-head {
+  padding: 1% 1.2%;
+  background-color: #337ab7;
+  color: white;
+  font-weight: 700;
+}
+
+/* FORM */
+.Employee-form {
+  padding: 3%;
+}
+
+/* ROWS */
+.form-property,
+.hobbies {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.2%;
+  gap: 1.5%;
+}
+
+/* LABEL */
+.form-label {
+  width: 10%;
+  font-weight: 700;
+  text-align-last: right;
+}
+
+/* INPUT */
+.form-input {
+  width: 90%;
+  padding: 0.6% 0.8%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Gender */
+.inline-options {
+  column-gap:4%;
+}
+
+/* Hobbies */
+.hobbies-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5%;
+}
+
+/* Button */
+.submit-btn {
+  padding: 0.5% 1%;
+  background-color: #337ab7;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  margin-left: 11%;
+  cursor: pointer;
+}
+
+
+.basic-view {
+  width: 90%;
+  max-width: 70%;
+  margin: 5% auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.basic-view-sec {
+  border: 2px solid #337ab7;
+  border-radius: 0.5%;
+}
+
+#basic-view-sec-head {
+  padding: 1% 1.2%;
+  background-color: #337ab7;
+  color: white;
+  font-weight: 700;
+}
+
+
+
+@media (max-width: 768px) {
+  .section-headind{
+    font-size: 140%;
+  }
+  .Employee {
+    max-width: 100%;
+  }
+
+  .Employee-form {
+    padding-left: 3%;
+  }
+
+  .form-property,
+  .hobbies {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-label {
+    width: 100%;
+      text-align-last: left;
+  }
+
+  .form-input,
+  .inline-options,
+  .hobbies-options {
+    width: 100%;
+  }
+
+  .submit-btn {
+    margin-left: 0;
+  }
+}

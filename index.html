@@ -1,11 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee</title>
+    <link rel="stylesheet" href="/HTML_CSS_JS/style.css" />
+  </head>
+
+  <body>
+    <div class="Employee">
+      <h1 class="section-headind">Employee</h1>
+
+      <div class="Employee-form-sec">
+        <p id="Employee-form-sec-head">Add Employee</p>
+
+        <div class="Employee-form">
+          <form id="employeeForm">
+            <div class="form-property">
+              <label class="form-label">Name :</label>
+              <input class="form-input" type="text" id="name" placeholder="Enter name" />
+            </div>
+
+            <div class="form-property">
+              <label class="form-label">Gender :</label>
+              <div class="inline-options">
+                <label><input type="radio" id="male" value="Male" /> Male</label
+                ><label> <input type="radio" id="female" name="gender" value="Female" /> Female</label>
+              </div>
+            </div>
+
+            <div class="form-property">
+              <label class="form-label">Date of birth :</label>
+              <input type="text" class="form-input" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" id="dob" />
+            </div>
+
+            <div class="form-property">
+              <label class="form-label">Email :</label>
+              <input class="form-input" type="email" id="email" placeholder="Enter email" />
+            </div>
+
+            <div class="form-property">
+              <label class="form-label">Phone :</label>
+              <input class="form-input" type="tel" id="phone" placeholder="Enter phone" />
+            </div>
+
+            <div class="hobbies">
+              <label class="form-label">Hobbies :</label>
+              <div class="hobbies-options">
+                <label><input class="hobby" type="checkbox" /> Cricket</label>
+                <label><input class="hobby" type="checkbox" /> Chess</label>
+                <label><input class="hobby" type="checkbox" /> Music</label>
+              </div>
+            </div>
+
+            <button class="submit-btn" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Basic Form -->
+    <div class="basic-view">
+      <h1 class="section-headind">Basic View</h1>
+      <div class="basic-view-sec">
+        <p id="basic-view-sec-head">Basic View</p>
+        <div class="basic-view-table"></div>
+      </div>
+    </div>
+
+    <!-- Advanced View -->
+      <div class="basic-view">
+      <h1 class="section-headind">Basic View</h1>
+      <div class="basic-view-sec">
+        <p id="basic-view-sec-head">Basic View</p>
+        <div class="basic-view-table"></div>
+      </div>
+    </div>
+    <script src="./src/main.js" type="module"></script>
+  </body>
 </html>
