@@ -9,7 +9,7 @@
   </head>
 
   <body>
-    <div class="Employee">
+    <div class="Employee" >
       <h1 class="section-headind">Employee</h1>
 
       <div class="Employee-form-sec">
@@ -25,14 +25,14 @@
             <div class="form-property">
               <label class="form-label">Gender :</label>
               <div class="inline-options">
-                <label><input type="radio" id="male" value="Male" /> Male</label
-                ><label> <input type="radio" id="female" name="gender" value="Female" /> Female</label>
+                <label><input type="radio" name="gender" id="male" value="Male" /> Male</label
+                ><label> <input type="radio" name="gender" id="female" name="gender" value="Female" /> Female</label>
               </div>
             </div>
 
             <div class="form-property">
               <label class="form-label">Date of birth :</label>
-              <input type="text" class="form-input" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" id="dob" />
+              <input type="text" class="form-input" placeholder="mm/dd/yyyy" onfocus="(this.type='date') "  id="dob" />
             </div>
 
             <div class="form-property">
@@ -48,13 +48,15 @@
             <div class="hobbies">
               <label class="form-label">Hobbies :</label>
               <div class="hobbies-options">
-                <label><input class="hobby" type="checkbox" /> Cricket</label>
-                <label><input class="hobby" type="checkbox" /> Chess</label>
-                <label><input class="hobby" type="checkbox" /> Music</label>
+                <label><input class="hobby" value="Cricket" name="hobby" type="checkbox" /> Cricket</label>
+                <label><input class="hobby" name="hobby"  value = "Chess" type="checkbox" /> Chess</label>
+                <label><input class="hobby" name="hobby" value="Music" type="checkbox" /> Music</label>
               </div>
             </div>
 
-            <button class="submit-btn" type="submit">Submit</button>
+            <div class="sub-btn">
+              <button class="submit-btn" type="submit">Submit</button>
+            </div>
           </form>
         </div>
       </div>
@@ -70,13 +72,14 @@
     </div>
 
     <!-- Advanced View -->
-      <div class="basic-view">
-      <h1 class="section-headind">Basic View</h1>
-      <div class="basic-view-sec">
-        <p id="basic-view-sec-head">Basic View</p>
-        <div class="basic-view-table"></div>
+      <div class="advance-view">
+      <h1 class="section-headind">Advance View</h1>
+      <div class="advance-view-sec">
+        <p id="advance-view-sec-head">Advnace View</p>
+        <div class="advance-view-table"></div>
       </div>
     </div>
+
     <script src="./src/main.js" type="module"></script>
   </body>
 </html>
