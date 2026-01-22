@@ -9,30 +9,31 @@ export default class Main {
 
   startForm() {
     const form = document.getElementById('employeeForm');
-
+    const dobInput = document.getElementById('dob');
+    // dates
+    const today = new Date();
+    // Format the date as YYYY-MM-DD
+    const year = today.getFullYear();
+    const month = String(today.getMonth() +1).padStart(2,'0');
+    const day =  String(today.getDate());
+    const maxDate = `${year}-${month}-${day}`;
+    dobInput.max = maxDate;
+    
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-
+      
       const nameInput = document.getElementById('name');
       const maleRadio = document.getElementById('male');
       const femaleRadio = document.getElementById('female');
-      const dobInput = document.getElementById('dob');
       const emailInput = document.getElementById('email');
       const phoneInput = document.getElementById('phone');
+
       // gender
       let gender = '';
       if (maleRadio.checked) gender = 'Male';
       else if (femaleRadio.checked) gender = 'Female';
-
-      // dates
-      const today = new Date();
-      // Format the date as YYYY-MM-DD
-      const year = today.getFullYear();
-      const month = today.getMonth().toString().padStart(2, '0');
-      const day = today.getDate().toString().padStart(2, '0');
-      const maxDate = `${year}-${month}-${day}`;
-      dobInput.setAttribute('max', maxDate);
-
+      
+      
       // hobbies
       const hobbyInputs = document.querySelectorAll('input[name="hobby"]:checked');
 
@@ -50,15 +51,15 @@ export default class Main {
         hobbies,
       };
 
-      if (!employeeData.name || !employeeData.email || !employeeData.gender) {
-        alert("Name, Email and Gender are required");
-        return;
-      }
+      // if (!employeeData.name || !employeeData.email || !employeeData.gender) {
+      //   alert("Name, Email and Gender are required");
+      //   return;
+      // }
 
-      if (employeeData.name.length < 4 || employeeData.name.length > 20) {
-        alert("Name must be between 4 and 20 characters");
-        return;
-      }
+      // if (employeeData.name.length < 4 || employeeData.name.length > 20) {
+      //   alert("Name must be between 4 and 20 characters");
+      //   return;
+      // }
 
       // this.employees.push(employeeData);
       if (this.editIn !== null) {
@@ -99,7 +100,10 @@ export default class Main {
       const th = document.createElement('th');
       th.innerText = text;
       th.style.border = '1px solid #ccc';
-      // th.style.padding = '8px';
+      // th.style.textAlign='left';
+      // th.style.paddingLeft='1.5%';
+      // th.style.width='fit-content';
+      th.style.padding = '8px';
       headerRow.appendChild(th);
     });
 
@@ -115,15 +119,20 @@ export default class Main {
         const td = document.createElement('td');
         td.innerText = value;
         td.style.border = '1px solid #ccc';
+        td.style.textAlign = 'left';
+        td.style.paddingLeft = '1%';
         row.appendChild(td);
       });
 
       const td = document.createElement('td');
-      td.style.display = 'flex';
+      // td.style.display = 'flex';
       td.style.justifyContent = 'center';
+      td.style.textAlign = 'left';
+      td.style.paddingTop = '1.25px';
       td.style.borderRight = '1px solid #ccc';
       td.style.borderBottom = '1px solid #ccc';
       td.style.padding = '8px';
+
 
       const del_btn = document.createElement('button');
       del_btn.textContent = 'DELETE';
@@ -174,6 +183,8 @@ export default class Main {
     thaction.innerText = 'Action';
     thaction.style.border = '1px solid #ccc';
     thaction.style.padding = '8px';
+    // thaction.style.textAlign = 'left';
+    // thaction.style.paddingLeft = '1.5%';
     headerRow.appendChild(thaction);
 
     table.appendChild(tbody);
@@ -206,8 +217,10 @@ export default class Main {
 
       const th = document.createElement('th');
       th.innerText = header.label;
-      th.style.border = '1px solid #ccc';
+      th.style.textAlign = 'left';
       th.style.padding = '8px';
+      th.style.paddingLeft = '1.5%';
+      th.style.border = '1px solid #ccc';
       row.appendChild(th);
 
       data.forEach((emp) => {
@@ -224,7 +237,8 @@ export default class Main {
     const th = document.createElement('th');
     th.innerText = 'Action';
     th.style.border = '1px solid #ccc';
-    th.style.padding = '8px';
+    th.style.textAlign = 'left';
+    th.style.paddingLeft = '1.5%';
     bottom_row.appendChild(th);
 
     data.forEach((emp, index) => {
