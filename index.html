@@ -5,80 +5,102 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Employee</title>
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <div class="Employee" >
-      <h1 class="section-headind">Employee</h1>
+    <main class="Task">
+      <!-- Employee Section -->
+      <section class="Employee">
+        <header>
+          <h1 class="section-headind">Employee</h1>
+        </header>
 
-      <div class="Employee-form-sec">
-        <p id="Employee-form-sec-head">Add Employee</p>
+        <section class="Employee-form-sec">
+          <header>
+            <p id="Employee-form-sec-head">Add Employee</p>
+          </header>
 
-        <div class="Employee-form">
-          <form id="employeeForm">
-            <div class="form-property">
-              <label class="form-label">Name :</label>
-              <input class="form-input" type="text" id="name" placeholder="Enter name" />
-            </div>
-
-            <div class="form-property">
-              <label class="form-label">Gender :</label>
-              <div class="inline-options">
-                <label><input type="radio" name="gender" id="male" value="Male" /> Male</label
-                ><label> <input type="radio" name="gender" id="female" name="gender" value="Female" /> Female</label>
+          <section class="Employee-form">
+            <form id="employeeForm">
+              <span id="dataError" ></span>
+              <div class="form-property">
+                <label class="form-label">Name :</label>
+                <input class="form-input" type="text" id="name" placeholder="Enter name" />
               </div>
-            </div>
+              <span id="nameError" ></span>
 
-            <div class="form-property">
-              <label class="form-label">Date of birth :</label>
-              <input type="text" class="form-input" placeholder="mm/dd/yyyy" onfocus="(this.type='date') "  id="dob" />
-            </div>
-
-            <div class="form-property">
-              <label class="form-label">Email :</label>
-              <input class="form-input" type="email" id="email" placeholder="Enter email" />
-            </div>
-
-            <div class="form-property">
-              <label class="form-label">Phone :</label>
-              <input class="form-input" type="tel" id="phone" placeholder="Enter phone" />
-            </div>
-
-            <div class="hobbies">
-              <label class="form-label">Hobbies :</label>
-              <div class="hobbies-options">
-                <label><input class="hobby" value="Cricket" name="hobby" type="checkbox" /> Cricket</label>
-                <label><input class="hobby" name="hobby"  value = "Chess" type="checkbox" /> Chess</label>
-                <label><input class="hobby" name="hobby" value="Music" type="checkbox" /> Music</label>
+              <div class="form-property" role="group" aria-label="Gender">
+                <label class="form-label">Gender :</label>
+                <div class="inline-options">
+                  <label> <input type="radio" name="gender" id="male" value="Male" checked/> Male </label>
+                  <label> <input type="radio" name="gender" id="female" value="Female" /> Female </label>
+                </div>
               </div>
-            </div>
+              
+              <div class="form-property">
+                <label class="form-label">Date of birth :</label>
+                <input type="text" class="form-input" placeholder="mm/dd/yyyy" onfocus="(this.type='date')" id="dob" />
+              </div>
+              <span id="dateError"></span>
 
-            <div class="sub-btn">
-              <button class="submit-btn" type="submit">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+              <div class="form-property">
+                <label class="form-label">Email :</label>
+                <input class="form-input" type="email" id="email" placeholder="Enter email" />
+              </div>
+              <span id ='emailError' ></span>
 
-    <!-- Basic Form -->
-    <div class="basic-view">
-      <h1 class="section-headind">Basic View</h1>
-      <div class="basic-view-sec">
-        <p id="basic-view-sec-head">Basic View</p>
-        <div class="basic-view-table"></div>
-      </div>
-    </div>
+              <div class="form-property">
+                <label class="form-label">Phone :</label>
+                <input class="form-input" type="tel" id="phone" placeholder="Enter phone" />
+              </div>
+              <span id="phoneError"></span>
 
-    <!-- Advanced View -->
-      <div class="advance-view">
-      <h1 class="section-headind">Advance View</h1>
-      <div class="advance-view-sec">
-        <p id="advance-view-sec-head">Advnace View</p>
-        <div class="advance-view-table"></div>
-      </div>
-    </div>
+              <div class="hobbies" role="group" aria-label="Hobbies">
+                <label class="form-label">Hobbies :</label>
+                <div class="hobbies-options">
+                  <label> <input class="hobby" value="Cricket" name="hobby" type="checkbox" /> Cricket </label>
+                  <label> <input class="hobby" name="hobby" value="Chess" type="checkbox" /> Chess </label>
+                  <label> <input class="hobby" name="hobby" value="Music" type="checkbox" /> Music </label>
+                </div>
+              </div>
+
+              <div class="sub-btn">
+                <button id = "submit-btn" class="submit-btn" type="submit">Submit</button>
+              </div>
+            </form>
+          </section>
+        </section>
+      </section>
+
+      <!-- Basic View -->
+      <section class="basic-view">
+        <header>
+          <h1 class="section-headind">Basic</h1>
+        </header>
+
+        <section class="basic-view-sec">
+          <header>
+            <p id="basic-view-sec-head">Display</p>
+          </header>
+          <div class="basic-view-table"></div>
+        </section>
+      </section>
+
+      <!-- Advanced View -->
+      <section class="advance-view">
+        <header>
+          <h1 class="section-headind">Advanced</h1>
+        </header>
+
+        <section class="advance-view-sec">
+          <header>
+            <p id="advance-view-sec-head">Display</p>
+          </header>
+          <div class="advance-view-table"></div>
+        </section>
+      </section>
+    </main>
 
     <script src="./src/main.js" type="module"></script>
   </body>

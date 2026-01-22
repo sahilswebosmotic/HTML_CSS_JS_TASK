@@ -7,21 +7,29 @@ export default class Main {
     this.startForm();
   }
 
+    formatDOB(dateStr) {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-');
+    return `${m}/${d}/${y}`;
+  }
+
   startForm() {
     const form = document.getElementById('employeeForm');
     const dobInput = document.getElementById('dob');
+    // console.log(dobInput.toLocaleDateString('en-US'));
     // dates
     const today = new Date();
-    // Format the date as YYYY-MM-DD
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
     const year = today.getFullYear();
-    const month = String(today.getMonth() +1).padStart(2,'0');
-    const day =  String(today.getDate());
-    const maxDate = `${year}-${month}-${day}`;
-    dobInput.max = maxDate;
+    // const maxDate = `${day}/${month}/${year}`;
+   dobInput.max = `${year}-${month}-${day}`;;
+
     
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      
+
       const nameInput = document.getElementById('name');
       const maleRadio = document.getElementById('male');
       const femaleRadio = document.getElementById('female');
@@ -32,8 +40,7 @@ export default class Main {
       let gender = '';
       if (maleRadio.checked) gender = 'Male';
       else if (femaleRadio.checked) gender = 'Female';
-      
-      
+
       // hobbies
       const hobbyInputs = document.querySelectorAll('input[name="hobby"]:checked');
 
@@ -51,17 +58,76 @@ export default class Main {
         hobbies,
       };
 
-      // if (!employeeData.name || !employeeData.email || !employeeData.gender) {
-      //   alert("Name, Email and Gender are required");
-      //   return;
-      // }
+      if (!employeeData.name) {
+        nameError.textContent = 'Name is required';
+        nameError.style.display = 'block';
+        nameError.style.color = 'red';
+        nameError.style.justifySelf = 'center';
+        nameInput.focus();
+        return;
+      }
+      nameError.textContent = '';
+      nameError.style.display = 'none';
+      if (employeeData.name.length < 4 || employeeData.name.length > 20) {
+        nameError.textContent = 'Name must be between 4 and 20 characters';
+        nameError.style.display = 'block';
+        nameError.style.color = 'red';
+        nameError.style.justifySelf = 'center';
+        nameInput.focus();
+        return;
+      }
+      nameError.textContent = '';
+      nameError.style.display = 'none';
 
-      // if (employeeData.name.length < 4 || employeeData.name.length > 20) {
-      //   alert("Name must be between 4 and 20 characters");
-      //   return;
-      // }
+      if (!employeeData.email) {
+        emailError.textContent = 'Name,and Email are required';
+        emailError.style.display = 'block';
+        emailError.style.color = 'red';
+        emailError.style.justifySelf = 'center';
+        emailInput.focus();
+        return;
+      }
+      emailError.textContent = '';
+      emailError.style.display = 'none';
 
-      // this.employees.push(employeeData);
+      if (!employeeData.dob) {
+        dateError.textContent = 'Date of Birth is required';
+        dateError.style.display = 'block';
+        dateError.style.color = 'red';
+        dateError.style.justifySelf = 'center';
+        dobInput.focus();
+        return;
+      }
+      dateError.textContent = '';
+      dateError.style.display = 'none';
+
+
+      // optional when the type is text becasue this is the way to do it with type is text otherwise by default email type has validation for email input
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+      if (!emailRegex.test(employeeData.email)) {
+        // alert('Enter a valid email address');
+        emailError.textContent = 'Enter valid Email Address';
+        emailError.style.display = 'block';
+        emailError.style.color = 'red';
+        emailError.style.justifySelf = 'center';
+        emailInput.focus();
+        return;
+      }
+      emailError.textContent = '';
+      emailError.style.display = 'none';
+
+      if (phoneInput.value.length > 10 || phoneInput.value.length < 10) {
+        phoneError.textContent = 'Enter a valid 10 digit Phone number';
+        phoneError.style.display = 'block';
+        phoneError.style.color = 'red';
+        phoneError.style.justifySelf = 'center';
+        phoneInput.focus();
+        return;
+      }
+      phoneError.textContent = '';
+      phoneError.style.display = 'none';
+
       if (this.editIn !== null) {
         // UPDATE
         this.employees[this.editIn] = employeeData;
@@ -81,14 +147,12 @@ export default class Main {
   // basis view
   renderbasicEmployeeTable(data) {
     const container = document.querySelector('.basic-view-table');
-    container.style.width = '100%';
     if (!container) return;
 
     container.innerHTML = '';
 
     const table = document.createElement('table');
     table.style.width = '100%';
-    // table.style.border-spacing ='0px';
     table.style.alignSelf = 'center';
     table.style.borderCollapse = 'collapse';
 
@@ -99,11 +163,7 @@ export default class Main {
     headers.forEach((text) => {
       const th = document.createElement('th');
       th.innerText = text;
-      th.style.border = '1px solid #ccc';
-      // th.style.textAlign='left';
-      // th.style.paddingLeft='1.5%';
-      // th.style.width='fit-content';
-      th.style.padding = '8px';
+      th.classList.add('basic-view-header');
       headerRow.appendChild(th);
     });
 
@@ -115,24 +175,15 @@ export default class Main {
     data.forEach((emp, index) => {
       const row = document.createElement('tr');
 
-      [emp.name, emp.gender, emp.dob, emp.email, emp.phone, emp.hobbies.join(', ')].forEach((value) => {
+      [emp.name, emp.gender, this.formatDOB(emp.dob), emp.email, emp.phone, emp.hobbies.join(', ')].forEach((value) => {
         const td = document.createElement('td');
         td.innerText = value;
-        td.style.border = '1px solid #ccc';
-        td.style.textAlign = 'left';
-        td.style.paddingLeft = '1%';
+        td.classList.add('basic-view-data');
         row.appendChild(td);
       });
 
       const td = document.createElement('td');
-      // td.style.display = 'flex';
-      td.style.justifyContent = 'center';
-      td.style.textAlign = 'left';
-      td.style.paddingTop = '1.25px';
-      td.style.borderRight = '1px solid #ccc';
-      td.style.borderBottom = '1px solid #ccc';
-      td.style.padding = '8px';
-
+      td.classList.add('basic-view-action-data');
 
       const del_btn = document.createElement('button');
       del_btn.textContent = 'DELETE';
@@ -141,7 +192,6 @@ export default class Main {
         this.employees.splice(index, 1);
         this.renderadvancedEmployeeTable(this.employees);
         this.renderbasicEmployeeTable(this.employees);
-        // table.deleteRow(index);
       });
 
       del_btn.classList.add('del-btn');
@@ -165,6 +215,7 @@ export default class Main {
         hobbyInputs.forEach((hobby) => {
           hobby.checked = emp.hobbies.includes(hobby.value);
         });
+        document.getElementById('submit-btn').textContent = 'Update';
 
         window.scrollTo({
           top: 0,
@@ -181,10 +232,7 @@ export default class Main {
 
     const thaction = document.createElement('th');
     thaction.innerText = 'Action';
-    thaction.style.border = '1px solid #ccc';
-    thaction.style.padding = '8px';
-    // thaction.style.textAlign = 'left';
-    // thaction.style.paddingLeft = '1.5%';
+    thaction.classList.add('basic-view-action');
     headerRow.appendChild(thaction);
 
     table.appendChild(tbody);
@@ -217,17 +265,17 @@ export default class Main {
 
       const th = document.createElement('th');
       th.innerText = header.label;
-      th.style.textAlign = 'left';
-      th.style.padding = '8px';
-      th.style.paddingLeft = '1.5%';
-      th.style.border = '1px solid #ccc';
+      th.classList.add('advance-view-header');
       row.appendChild(th);
 
       data.forEach((emp) => {
         const td = document.createElement('td');
-        td.style.border = '1px solid #ccc';
-        td.style.padding = '8px';
+        td.classList.add('advance-view-data');
+        if(header.key=='dob'){
+          td.innerText = this.formatDOB(emp[header.key]);
+        }else{
         td.innerText = emp[header.key];
+        }
         row.appendChild(td);
       });
 
@@ -236,26 +284,18 @@ export default class Main {
     const bottom_row = document.createElement('tr');
     const th = document.createElement('th');
     th.innerText = 'Action';
-    th.style.border = '1px solid #ccc';
-    th.style.textAlign = 'left';
-    th.style.paddingLeft = '1.5%';
+    th.classList.add('advance-view-action');
     bottom_row.appendChild(th);
 
     data.forEach((emp, index) => {
       const td = document.createElement('td');
-      td.style.border = '1px solid #ccc';
-      td.style.padding = '8px';
+      td.classList.add('advance-view-action-data');
 
       const del_btn = document.createElement('button');
       del_btn.textContent = 'DELETE';
       del_btn.classList.add('del-btn');
 
       del_btn.addEventListener('click', () => {
-        // table.deleteColumn(index);
-        // var rowCount = table.rows.length;
-        // for (let i = 0; i < rowCount; i++) {
-        //   table.rows[i].deleteCell(index);
-        // }
         this.employees.splice(index, 1);
         this.renderadvancedEmployeeTable(this.employees);
         this.renderbasicEmployeeTable(this.employees);
@@ -280,6 +320,7 @@ export default class Main {
         hobbyInputs.forEach((hobby) => {
           hobby.checked = emp.hobbies.includes(hobby.value);
         });
+        document.getElementById('submit-btn').textContent = 'Update';
 
         window.scrollTo({
           top: 0,
