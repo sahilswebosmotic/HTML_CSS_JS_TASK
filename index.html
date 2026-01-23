@@ -22,7 +22,7 @@
           </header>
 
           <section class="Employee-form">
-            <form id="employeeForm">
+            <form id="employeeForm" novalidate>
               <span id="dataError" ></span>
               <div class="form-property">
                 <label class="form-label">Name :</label>
@@ -40,7 +40,7 @@
               
               <div class="form-property">
                 <label class="form-label">Date of birth :</label>
-                <input type="text" class="form-input" placeholder="dd-mm-yyyy (Required)" onfocus="(this.type='date')"  id="dob"  />
+                <input type="date" class="form-input" placeholder="dd-mm-yyyy (Required)" onfocus="(this.type='date')"  id="dob"  />
               </div>
               <span id="dateError"></span>
 

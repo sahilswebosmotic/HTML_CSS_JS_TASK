@@ -1,10 +1,38 @@
-import sampleData from '../assets/sampleData.js';
 export default class SubMain {
   constructor() {
-    // get form
     this.employees = [];
-    this.editIn = null;
-    this.startForm();
+    this.id = null;
+    this.loadFromStorage();
+    this.formHandler();
+    
+    this.render_Basic_Employee_Table(this.employees);
+    this.render_Advanced_Employee_Table(this.employees);
+  }
+
+  toggleViewsVisibility() {
+    const basicView = document.querySelector('.basic-view');
+    const advanceView = document.querySelector('.advance-view');
+
+    if (!basicView || !advanceView) return;
+
+    const hasData = this.employees.length > 0;
+
+    basicView.style.display = hasData ? 'block' : 'none';
+    advanceView.style.display = hasData ? 'block' : 'none';
+  }
+
+  loadFromStorage() {
+    const data = localStorage.getItem('userPrefs');
+    if (data) {
+      this.employees = JSON.parse(data);
+    } else {
+      this.employees = [];
+      this.saveToStorage();
+    }
+  }
+
+  saveToStorage() {
+    localStorage.setItem('userPrefs', JSON.stringify(this.employees));
   }
 
   formatDOB(dateStr) {
@@ -25,7 +53,7 @@ export default class SubMain {
     el.style.display = 'none';
   }
 
-  startForm() {
+  formHandler() {
     const form = document.getElementById('employeeForm');
     const dobInput = document.getElementById('dob');
     // dates
@@ -58,6 +86,7 @@ export default class SubMain {
       }
 
       const employeeData = {
+        id: Date.now(),
         name: nameInput.value.trim(),
         gender,
         dob: dobInput.value,
@@ -65,6 +94,7 @@ export default class SubMain {
         phone: phoneInput.value.trim(),
         hobbies,
       };
+
 
       if (!employeeData.name) {
         this.showError(nameError, 'Name is required');
@@ -86,6 +116,14 @@ export default class SubMain {
         return;
       }
       this.hideError(dateError);
+
+      if(employeeData.dob>dobInput.max){
+        this.showError(dateError,'Max input date is Today');
+        dobInput.focus();
+        return;
+      }
+      this.hideError(dateError);
+
 
       if (!employeeData.email) {
         this.showError(emailError, 'Email is required');
@@ -112,27 +150,27 @@ export default class SubMain {
       }
       this.hideError(phoneError);
 
-      if (this.editIn !== null) {
-        // UPDATE
-        this.employees[this.editIn] = employeeData;
-        this.editIn = null;
+      if (this.id !== null) {
+        this.employees[id] = employeeData;
+        this.id = null;
       } else {
-        // CREATE
         this.employees.push(employeeData);
       }
 
-      this.renderbasicEmployeeTable(this.employees);
-      this.renderadvancedEmployeeTable(this.employees);
-
+      this.saveToStorage();
+      this.render_Basic_Employee_Table(this.employees);
+      this.render_Advanced_Employee_Table(this.employees);
+      this.toggleViewsVisibility();
       form.reset();
     });
   }
+  
 
   // basic view
-  renderbasicEmployeeTable(data) {
+  render_Basic_Employee_Table(data) {
+    this.toggleViewsVisibility();
     const container = document.querySelector('.basic-view-table');
-    if (!container) return;
-
+    
     container.innerHTML = '';
 
     const table = document.createElement('table');
@@ -154,7 +192,7 @@ export default class SubMain {
 
     const tbody = document.createElement('tbody');
 
-    data.forEach((emp, index) => {
+    data.forEach((emp, id) => {
       const row = document.createElement('tr');
       [emp.name, emp.gender, this.formatDOB(emp.dob), emp.email, emp.phone, emp.hobbies.join(',  ')].forEach(
         (value) => {
@@ -172,9 +210,10 @@ export default class SubMain {
       del_btn.textContent = 'DELETE';
 
       del_btn.addEventListener('click', () => {
-        this.employees.splice(index, 1);
-        this.renderadvancedEmployeeTable(this.employees);
-        this.renderbasicEmployeeTable(this.employees);
+        this.employees.splice(id, 1);
+        this.saveToStorage(data);
+        this.render_Advanced_Employee_Table(this.employees);
+        this.render_Basic_Employee_Table(this.employees);
       });
 
       del_btn.classList.add('del-btn');
@@ -184,7 +223,7 @@ export default class SubMain {
       up_btn.classList.add('up-btn');
 
       up_btn.addEventListener('click', () => {
-        this.editIn = index;
+        this.id = id;
 
         document.getElementById('name').value = emp.name;
         document.getElementById('dob').value = emp.dob;
@@ -197,14 +236,17 @@ export default class SubMain {
         hobbyInputs.forEach((hobby) => {
           hobby.checked = emp.hobbies.includes(hobby.value);
         });
-        document.getElementById('submit-btn').textContent = 'Update';
+        let sbmtButton = document.getElementById('submit-btn');
+        sbmtButton.textContent = 'Update';
 
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
         });
       });
+
       document.getElementById('submit-btn').textContent = 'Submit';
+
       td.appendChild(del_btn);
       td.appendChild(up_btn);
       row.appendChild(td);
@@ -222,11 +264,10 @@ export default class SubMain {
   }
 
   // Advanced view
-  renderadvancedEmployeeTable(data) {
+  render_Advanced_Employee_Table(data) {
     const container = document.querySelector('.advance-view-table');
-    if (!container) return;
-    container.innerHTML = '';
 
+    container.innerHTML = '';
     const table = document.createElement('table');
     table.classList.add('view-table-innertable');
 
@@ -269,7 +310,7 @@ export default class SubMain {
     th.classList.add('advance-view-action');
     bottom_row.appendChild(th);
 
-    data.forEach((emp, index) => {
+    data.forEach((emp, id) => {
       const td = document.createElement('td');
       td.classList.add('advance-view-action-data');
 
@@ -278,9 +319,10 @@ export default class SubMain {
       del_btn.classList.add('del-btn');
 
       del_btn.addEventListener('click', () => {
-        this.employees.splice(index, 1);
-        this.renderadvancedEmployeeTable(this.employees);
-        this.renderbasicEmployeeTable(this.employees);
+        this.employees.splice(id, 1);
+        this.saveToStorage(data);
+        this.render_Advanced_Employee_Table(this.employees);
+        this.render_Basic_Employee_Table(this.employees);
       });
 
       const up_btn = document.createElement('button');
@@ -289,6 +331,11 @@ export default class SubMain {
 
       up_btn.addEventListener('click', () => {
         this.editIn = index;
+
+        // b = ['name','dob','email'];
+        // b.forEach(field => {
+        //   document.getElementById(field).value = emp[field];
+        // });
 
         document.getElementById('name').value = emp.name;
         document.getElementById('dob').value = emp.dob;
