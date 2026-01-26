@@ -8,39 +8,37 @@ import {
 } from './Utils.js';
 
 
+const STORAGE_KEY = 'usersPrefs';
+
+const GENDER = {
+  MALE: 'Male',
+  FEMALE: 'Female',
+};
+const DOM = {
+  form: document.getElementById('employeeForm'),
+  submitBtn: document.getElementById('submit-btn'),
+  cancelBtn: document.getElementById('cancel-btn'),
+
+  inputs: {
+    name: document.getElementById('name'),
+    dob: document.getElementById('dob'),
+    email: document.getElementById('email'),
+    phone: document.getElementById('phone'),
+    male: document.getElementById('male'),
+    female: document.getElementById('female'),
+    hobbies: document.querySelectorAll('input[name="hobby"]'),
+  },
+
+  views: {
+    basic: document.querySelector('.basic-view'),
+    advance: document.querySelector('.advance-view'),
+    basicTable: document.querySelector('.basic-view-table'),
+    advanceTable: document.querySelector('.advance-view-table'),
+  },
+};
 
 export default class SubMain {
   constructor() {
-    this.STORAGE_KEY = 'usersPrefs';
-
-    this.GENDER = {
-      MALE: 'Male',
-      FEMALE: 'Female',
-    };
-
-    this.DOM = {
-      form: document.getElementById('employeeForm'),
-      submitBtn: document.getElementById('submit-btn'),
-      cancelBtn: document.getElementById('cancel-btn'),
-
-      inputs: {
-        name: document.getElementById('name'),
-        dob: document.getElementById('dob'),
-        email: document.getElementById('email'),
-        phone: document.getElementById('phone'),
-        male: document.getElementById('male'),
-        female: document.getElementById('female'),
-        hobbies: document.querySelectorAll('input[name="hobby"]'),
-      },
-
-      views: {
-        basic: document.querySelector('.basic-view'),
-        advance: document.querySelector('.advance-view'),
-        basicTable: document.querySelector('.basic-view-table'),
-        advanceTable: document.querySelector('.advance-view-table'),
-      },
-    };
-
     this.employees = [];
     this.id = null;
     this.loadFromStorage();
@@ -81,9 +79,11 @@ export default class SubMain {
 
       const selectedDate = new Date(value);
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const tommorow = new Date(today);
+      tommorow.setDate(today.getDate()+1);
+      tommorow.setHours(0, 0, 0, 0);
 
-      if (!isNaN(selectedDate) && selectedDate <= today) {
+      if (!isNaN(selectedDate) && selectedDate <= tommorow ) {
         hideError(dateError);
       }
     });
@@ -131,11 +131,12 @@ export default class SubMain {
       } else {
         const selectedDate = new Date(employeeData.dob);
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
+        const tommorow = new Date(today);
+        tommorow.setDate(today.getDate()+1);
+        tommorow.setHours(0,0,0,0);
         if (isNaN(selectedDate.getTime())) {
           errors.dob = "* Invalid date";
-        } else if (selectedDate > today) {
+        } else if (selectedDate > tommorow) {
           errors.dob = "* Future dates are not allowed";
         }
       }
