@@ -1,28 +1,59 @@
+import {
+  toggleViewsVisibility,
+  formatDOB,
+  showError,
+  hideError,
+  getFormData,
+  setMaxDOB,
+} from './Utils.js';
+
+
+
 export default class SubMain {
   constructor() {
+    this.STORAGE_KEY = 'usersPrefs';
+
+    this.GENDER = {
+      MALE: 'Male',
+      FEMALE: 'Female',
+    };
+
+    this.DOM = {
+      form: document.getElementById('employeeForm'),
+      submitBtn: document.getElementById('submit-btn'),
+      cancelBtn: document.getElementById('cancel-btn'),
+
+      inputs: {
+        name: document.getElementById('name'),
+        dob: document.getElementById('dob'),
+        email: document.getElementById('email'),
+        phone: document.getElementById('phone'),
+        male: document.getElementById('male'),
+        female: document.getElementById('female'),
+        hobbies: document.querySelectorAll('input[name="hobby"]'),
+      },
+
+      views: {
+        basic: document.querySelector('.basic-view'),
+        advance: document.querySelector('.advance-view'),
+        basicTable: document.querySelector('.basic-view-table'),
+        advanceTable: document.querySelector('.advance-view-table'),
+      },
+    };
+
     this.employees = [];
     this.id = null;
     this.loadFromStorage();
+    setMaxDOB(DOM.inputs.dob);
     this.formHandler();
-    
+
     this.render_Basic_Employee_Table(this.employees);
     this.render_Advanced_Employee_Table(this.employees);
   }
 
-  toggleViewsVisibility() {
-    const basicView = document.querySelector('.basic-view');
-    const advanceView = document.querySelector('.advance-view');
-
-    if (!basicView || !advanceView) return;
-
-    const hasData = this.employees.length > 0;
-
-    basicView.style.display = hasData ? 'block' : 'none';
-    advanceView.style.display = hasData ? 'block' : 'none';
-  }
 
   loadFromStorage() {
-    const data = localStorage.getItem('userPrefs');
+    const data = localStorage.getItem(STORAGE_KEY);
     if (data) {
       this.employees = JSON.parse(data);
     } else {
@@ -32,126 +63,106 @@ export default class SubMain {
   }
 
   saveToStorage() {
-    localStorage.setItem('userPrefs', JSON.stringify(this.employees));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.employees));
   }
 
-  formatDOB(dateStr) {
-    if (!dateStr) return '';
-    const [y, m, d] = dateStr.split('-');
-    return `${m}/${d}/${y}`;
+
+
+  LiveValidation() {
+    DOM.inputs.name.addEventListener('input', () => {
+      if (DOM.inputs.name.value.length >= 4 && DOM.inputs.name.value.length <= 20) {
+        hideError(nameError);
+      }
+    });
+
+    DOM.inputs.dob.addEventListener('change', () => {
+      const value = DOM.inputs.dob.value;
+      if (!value) return;
+
+      const selectedDate = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (!isNaN(selectedDate) && selectedDate <= today) {
+        hideError(dateError);
+      }
+    });
+
+
+    DOM.inputs.email.addEventListener('input', () => {
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(DOM.inputs.email.value)) {
+        hideError(emailError);
+      }
+    });
+
+    DOM.inputs.phone.addEventListener('input', () => {
+      if (
+        !DOM.inputs.phone.value ||
+        DOM.inputs.phone.value.length === 10
+      ) {
+        hideError(phoneError);
+      }
+    });
+
   }
 
-  // validation error
-  showError(el, msg) {
-    el.textContent = msg;
-    el.classList.add('error-Msg');
-    el.style.display = 'block';
-  }
 
-  hideError(el) {
-    el.textContent = '';
-    el.style.display = 'none';
-  }
 
   formHandler() {
     const form = document.getElementById('employeeForm');
-    const dobInput = document.getElementById('dob');
-    // dates
-    const today = new Date();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const year = today.getFullYear();
-    dobInput.max = `${year}-${month}-${day}`;
+
+    this.LiveValidation();
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const nameInput = document.getElementById('name');
-      const maleRadio = document.getElementById('male');
-      const femaleRadio = document.getElementById('female');
-      const emailInput = document.getElementById('email');
-      const phoneInput = document.getElementById('phone');
+      const employeeData = getFormData(DOM.inputs, GENDER);
+      const errors = {};
 
-      // gender
-      let gender = '';
-      if (maleRadio.checked) gender = 'Male';
-      else if (femaleRadio.checked) gender = 'Female';
-
-      // hobbies
-      const hobbyInputs = document.querySelectorAll('input[name="hobby"]:checked');
-
-      const hobbies = [];
-      for (let i = 0; i < hobbyInputs.length; i++) {
-        hobbies.push(hobbyInputs[i].value);
-      }
-
-      const employeeData = {
-        id: Date.now(),
-        name: nameInput.value.trim(),
-        gender,
-        dob: dobInput.value,
-        email: emailInput.value.trim(),
-        phone: phoneInput.value.trim(),
-        hobbies,
-      };
-
-
-      if (!employeeData.name) {
-        this.showError(nameError, 'Name is required');
-        nameInput.focus();
-        return;
-      }
-      this.hideError(nameError);
 
       if (employeeData.name.length < 4 || employeeData.name.length > 20) {
-        this.showError(nameError, 'Name should contain character between 4 to 20');
-        nameInput.focus();
-        return;
+        errors.name = "* Name Should contain character between 4 to 20";
       }
-      this.hideError(nameError);
+
+
 
       if (!employeeData.dob) {
-        this.showError(dateError, 'DOB is not Entered');
-        dobInput.focus();
-        return;
-      }
-      this.hideError(dateError);
+        errors.dob = "* DOB is required";
+      } else {
+        const selectedDate = new Date(employeeData.dob);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-      if(employeeData.dob>dobInput.max){
-        this.showError(dateError,'Max input date is Today');
-        dobInput.focus();
-        return;
+        if (isNaN(selectedDate.getTime())) {
+          errors.dob = "* Invalid date";
+        } else if (selectedDate > today) {
+          errors.dob = "* Future dates are not allowed";
+        }
       }
-      this.hideError(dateError);
 
-
-      if (!employeeData.email) {
-        this.showError(emailError, 'Email is required');
-        emailInput.focus();
-        return;
-      }
-      this.hideError(emailError);
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       if (!emailRegex.test(employeeData.email)) {
-        this.showError(emailError, 'Enter a valid email');
-        emailInput.focus();
+        errors.email = "* Enter a Valid Email";
+      }
+
+
+      if (employeeData.phone && employeeData.phone.length !== 10) {
+        errors.phone = "* Enter a valid 10 digit number";
+      }
+
+
+      if (Object.keys(errors).length > 0) {
+        if (errors.name) showError(nameError, errors.name);
+        if (errors.dob) showError(dateError, errors.dob);
+        if (errors.email) showError(emailError, errors.email);
+        if (errors.phone) showError(phoneError, errors.phone);
         return;
       }
-      this.hideError(emailError);
-
-      if (phoneInput.value.length > 1) {
-        if (phoneInput.value.length > 10 || phoneInput.value.length < 10) {
-          this.showError(phoneError, 'Enter a valid 10 digit phone number)');
-          phoneInput.focus();
-          return;
-        }
-      }
-      this.hideError(phoneError);
 
       if (this.id !== null) {
-        this.employees[id] = employeeData;
+        this.employees[this.id] = employeeData;
         this.id = null;
       } else {
         this.employees.push(employeeData);
@@ -160,18 +171,20 @@ export default class SubMain {
       this.saveToStorage();
       this.render_Basic_Employee_Table(this.employees);
       this.render_Advanced_Employee_Table(this.employees);
-      this.toggleViewsVisibility();
-      form.reset();
+      toggleViewsVisibility(this.employees, DOM.views);
+      DOM.form.reset();
+      this.id = null;
     });
   }
-  
+
 
   // basic view
   render_Basic_Employee_Table(data) {
-    this.toggleViewsVisibility();
-    const container = document.querySelector('.basic-view-table');
-    
+    const container = DOM.views.basicTable;
+
     container.innerHTML = '';
+
+    toggleViewsVisibility(data, DOM.views);
 
     const table = document.createElement('table');
     table.classList.add('view-table-innertable');
@@ -194,7 +207,7 @@ export default class SubMain {
 
     data.forEach((emp, id) => {
       const row = document.createElement('tr');
-      [emp.name, emp.gender, this.formatDOB(emp.dob), emp.email, emp.phone, emp.hobbies.join(',  ')].forEach(
+      [emp.name, emp.gender, formatDOB(emp.dob), emp.email, emp.phone, emp.hobbies.join(',  ')].forEach(
         (value) => {
           const td = document.createElement('td');
           td.innerText = value;
@@ -208,15 +221,15 @@ export default class SubMain {
 
       const del_btn = document.createElement('button');
       del_btn.textContent = 'DELETE';
+      del_btn.classList.add('del-btn');
 
       del_btn.addEventListener('click', () => {
         this.employees.splice(id, 1);
-        this.saveToStorage(data);
+        this.saveToStorage();
         this.render_Advanced_Employee_Table(this.employees);
         this.render_Basic_Employee_Table(this.employees);
       });
 
-      del_btn.classList.add('del-btn');
 
       const up_btn = document.createElement('button');
       up_btn.textContent = 'UPDATE';
@@ -224,28 +237,33 @@ export default class SubMain {
 
       up_btn.addEventListener('click', () => {
         this.id = id;
+        DOM.inputs.name.value = emp.name;
+        DOM.inputs.dob.value = emp.dob;
+        DOM.inputs.email.value = emp.email;
+        DOM.inputs.phone.value = emp.phone;
+        DOM.inputs.male.checked = emp.gender === GENDER.MALE;
+        DOM.inputs.female.checked = emp.gender === GENDER.FEMALE;
 
-        document.getElementById('name').value = emp.name;
-        document.getElementById('dob').value = emp.dob;
-        document.getElementById('email').value = emp.email;
-        document.getElementById('phone').value = emp.phone;
-        document.getElementById('male').checked = emp.gender === 'Male';
-        document.getElementById('female').checked = emp.gender === 'Female';
 
-        const hobbyInputs = document.querySelectorAll('input[name="hobby"]');
-        hobbyInputs.forEach((hobby) => {
-          hobby.checked = emp.hobbies.includes(hobby.value);
+        DOM.inputs.hobbies.forEach(h => {
+          h.checked = emp.hobbies.includes(h.value);
         });
-        let sbmtButton = document.getElementById('submit-btn');
-        sbmtButton.textContent = 'Update';
 
+        DOM.submitBtn.textContent = 'Update';
+        DOM.cancelBtn.style.display = 'block';
+        DOM.cancelBtn.onclick = () => {
+          DOM.form.reset();
+          this.id = null;
+          DOM.cancelBtn.style.display = 'none';
+          DOM.submitBtn.textContent = 'Submit';
+        }
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
         });
       });
 
-      document.getElementById('submit-btn').textContent = 'Submit';
+
 
       td.appendChild(del_btn);
       td.appendChild(up_btn);
@@ -253,6 +271,7 @@ export default class SubMain {
 
       tbody.appendChild(row);
     });
+
 
     const thaction = document.createElement('th');
     thaction.innerText = 'Action';
@@ -265,8 +284,7 @@ export default class SubMain {
 
   // Advanced view
   render_Advanced_Employee_Table(data) {
-    const container = document.querySelector('.advance-view-table');
-
+    const container = DOM.views.advanceTable;
     container.innerHTML = '';
     const table = document.createElement('table');
     table.classList.add('view-table-innertable');
@@ -293,7 +311,7 @@ export default class SubMain {
         const td = document.createElement('td');
         td.classList.add('advance-view-data');
         if (header.key == 'dob') {
-          td.innerText = this.formatDOB(emp[header.key]);
+          td.innerText = formatDOB(emp[header.key]);
         } else if (header.key == 'hobbies') {
           td.innerText = emp[header.key].join(',  ');
         } else {
@@ -330,32 +348,33 @@ export default class SubMain {
       up_btn.classList.add('up-btn');
 
       up_btn.addEventListener('click', () => {
-        this.editIn = index;
+        this.id = id;
+        DOM.inputs.name.value = emp.name;
+        DOM.inputs.dob.value = emp.dob;
+        DOM.inputs.email.value = emp.email;
+        DOM.inputs.phone.value = emp.phone;
+        DOM.inputs.male.checked = emp.gender === GENDER.MALE;
+        DOM.inputs.female.checked = emp.gender === GENDER.FEMALE;
 
-        // b = ['name','dob','email'];
-        // b.forEach(field => {
-        //   document.getElementById(field).value = emp[field];
-        // });
 
-        document.getElementById('name').value = emp.name;
-        document.getElementById('dob').value = emp.dob;
-        document.getElementById('email').value = emp.email;
-        document.getElementById('phone').value = emp.phone;
-        document.getElementById('male').checked = emp.gender === 'Male';
-        document.getElementById('female').checked = emp.gender === 'Female';
-
-        const hobbyInputs = document.querySelectorAll('input[name="hobby"]');
-        hobbyInputs.forEach((hobby) => {
-          hobby.checked = emp.hobbies.includes(hobby.value);
+        DOM.inputs.hobbies.forEach(h => {
+          h.checked = emp.hobbies.includes(h.value);
         });
-        document.getElementById('submit-btn').textContent = 'Update';
 
+        DOM.submitBtn.textContent = 'Update';
+        DOM.cancelBtn.style.display = 'block';
+        DOM.cancelBtn.onclick = () => {
+          DOM.form.reset();
+          this.id = null;
+          DOM.cancelBtn.style.display = 'none';
+          DOM.submitBtn.textContent = 'Submit';
+        }
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
         });
       });
-      document.getElementById('submit-btn').textContent = 'Submit';
+
       td.appendChild(del_btn);
       td.appendChild(up_btn);
 

@@ -1,107 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Employee</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body>
-    <main class="Task">
-      <!-- Employee Section -->
-      <section class="Employee">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="Task">
+    <!-- Employee Section -->
+    <section class="Employee">
+      <header>
+        <h1 class="section-headind">Employee</h1>
+      </header>
+
+      <section class="Employee-form-sec">
         <header>
-          <h1 class="section-headind">Employee</h1>
+          <p id="Employee-form-sec-head">Add Employee</p>
         </header>
 
-        <section class="Employee-form-sec">
-          <header>
-            <p id="Employee-form-sec-head">Add Employee</p>
-          </header>
-
-          <section class="Employee-form">
-            <form id="employeeForm" novalidate>
-              <span id="dataError" ></span>
-              <div class="form-property">
-                <label class="form-label">Name :</label>
+        <section class="Employee-form">
+          <form id="employeeForm" novalidate>
+            <span id="dataError"></span>
+            <div class="form-property">
+              <label class="form-label">Name :</label>
+              <div class="input-wrapper">
                 <input class="form-input" type="text" id="name" placeholder="Enter name (Required)" />
+                <span id="nameError"></span>
               </div>
-              <span id="nameError" ></span>
+            </div>
 
-              <div class="form-property" role="group" aria-label="Gender">
-                <label class="form-label">Gender :</label>
-                <div class="inline-options">
-                  <label> <input type="radio" name="gender" id="male" value="Male" checked/> Male </label>
-                  <label> <input type="radio" name="gender" id="female" value="Female" /> Female </label>
-                </div>
+            <div class="form-property" role="group" aria-label="Gender">
+              <label class="form-label">Gender :</label>
+              <div class="inline-options">
+                <label> <input type="radio" name="gender" id="male" value="Male" checked /> Male </label>
+                <label> <input type="radio" name="gender" id="female" value="Female" /> Female </label>
               </div>
-              
-              <div class="form-property">
-                <label class="form-label">Date of birth :</label>
-                <input type="date" class="form-input" placeholder="dd-mm-yyyy (Required)" onfocus="(this.type='date')"  id="dob"  />
-              </div>
-              <span id="dateError"></span>
+            </div>
 
-              <div class="form-property">
-                <label class="form-label">Email :</label>
+            <div class="form-property">
+              <label class="form-label">Date of birth :</label>
+              <div class="input-wrapper">
+                <input type="date" class="form-input" placeholder="dd-mm-yyyy (Required)"
+                id="dob" />
+                <span id="dateError"></span>
+              </div>
+            </div>
+
+            <div class="form-property">
+              <label class="form-label">Email :</label>
+              <div class="input-wrapper">
                 <input class="form-input" type="text" id="email" placeholder="Enter email (Required)" />
+                <span id='emailError'></span>
               </div>
-              <span id ='emailError' ></span>
+            </div>
 
-              <div class="form-property">
-                <label class="form-label">Phone :</label>
+            <div class="form-property">
+              <label class="form-label">Phone :</label>
+              <div class="input-wrapper"> 
                 <input class="form-input" type="tel" id="phone" placeholder="Enter phone  (Optional)" />
+                <span id="phoneError"></span>
               </div>
-              <span id="phoneError"></span>
+            </div>
 
-              <div class="hobbies" role="group" aria-label="Hobbies">
-                <label class="form-label">Hobbies :</label>
-                <div class="hobbies-options">
-                  <label> <input class="hobby" value="Cricket" name="hobby" type="checkbox" /> Cricket </label>
-                  <label> <input class="hobby" name="hobby" value="Chess" type="checkbox" /> Chess </label>
-                  <label> <input class="hobby" name="hobby" value="Music" type="checkbox" /> Music </label>
-                </div>
+            <div class="hobbies" role="group" aria-label="Hobbies">
+              <label class="form-label">Hobbies :</label>
+              <div class="hobbies-options">
+                <label> <input class="hobby" value="Cricket" name="hobby" type="checkbox" /> Cricket </label>
+                <label> <input class="hobby" name="hobby" value="Chess" type="checkbox" /> Chess </label>
+                <label> <input class="hobby" name="hobby" value="Music" type="checkbox" /> Music </label>
               </div>
+            </div>
 
+            <div class="form-buttons">
               <div class="sub-btn">
-                <button id = "submit-btn" class="submit-btn" type="submit">Submit</button>
+                <button id="submit-btn" class="submit-btn" type="submit">Submit</button>
               </div>
-            </form>
-          </section>
+              <div class="can-btn">
+                <button id="cancel-btn" class="cancel-btn" type="button">Cancel</button>
+              </div>
+            </div>
+          </form>
         </section>
       </section>
+    </section>
 
-      <!-- Basic View -->
-      <section class="basic-view">
+    <!-- Basic View -->
+    <section class="basic-view">
+      <header>
+        <h1 class="section-headind">Basic</h1>
+      </header>
+
+      <section class="basic-view-sec">
         <header>
-          <h1 class="section-headind">Basic</h1>
+          <p id="basic-view-sec-head">Display</p>
         </header>
-
-        <section class="basic-view-sec">
-          <header>
-            <p id="basic-view-sec-head">Display</p>
-          </header>
-          <div class="basic-view-table"></div>
-        </section>
+        <div class="basic-view-table"></div>
       </section>
+    </section>
 
-      <!-- Advanced View -->
-      <section class="advance-view">
+    <!-- Advanced View -->
+    <section class="advance-view">
+      <header>
+        <h1 class="section-headind">Advanced</h1>
+      </header>
+
+      <section class="advance-view-sec">
         <header>
-          <h1 class="section-headind">Advanced</h1>
+          <p id="advance-view-sec-head">Display</p>
         </header>
-
-        <section class="advance-view-sec">
-          <header>
-            <p id="advance-view-sec-head">Display</p>
-          </header>
-          <div class="advance-view-table"></div>
-        </section>
+        <div class="advance-view-table"></div>
       </section>
-    </main>
+    </section>
+  </main>
 
-    <script src="./src/main.js" type="module"></script>
-  </body>
+  <script src="./src/main.js" type="module"></script>
+</body>
+
 </html>
