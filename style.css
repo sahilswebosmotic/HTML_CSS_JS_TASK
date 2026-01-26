@@ -32,6 +32,10 @@
   flex-direction: column;
 }
 
+#employeeForm{
+  position: relative;
+}
+
 .employee-section-heading{
   text-align: center;
   margin-bottom: 0.25rem;
@@ -45,6 +49,7 @@
   font-size: 2rem;
   font-weight: 400;
   display: none;
+  /* visibility: hidden; */
 }
 
 .employee-form-sec {
@@ -242,17 +247,32 @@ input[name="gender"] {
   color: var(--color-danger);
 }
 
+.form-footer{
+  display: flex;
+  flex-direction: column;
+}
+
 .succ-up-Msg{
+  position: absolute;
+  top:100%;
+  bottom:0%;
+  left:43%;
   color: var(--color-success);
-  font-size: 18px;
+  font-size: 16px;
   margin: auto;
 }
 
 .del-Msg{
+  position: absolute;
+  top:100%;
+  bottom:0;
+  left:43%;
   color: var(--color-danger);
-  font-size: 18px;
+  font-size: 16px;
   margin: auto;
 }
+
+
 
 @media (max-width: 1024px) {
   .Employee,

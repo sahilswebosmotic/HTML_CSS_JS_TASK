@@ -35,6 +35,9 @@ const DOM = {
     advanceViewSecHead: document.querySelector('.advance-view-sec-head'),
   },
 };
+DOM.suc_message.style.visibility='visible';
+
+ DOM.del_message.style.visibility='visible';
 
 export default class SubMain {
   constructor() {
@@ -43,6 +46,14 @@ export default class SubMain {
     this.loadFromStorage();
     setMaxDOB(DOM.inputs.dob);
     this.formHandler();
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) {
+        this.loadFromStorage();
+        this.render_Basic_Employee_Table(this.employees);
+        this.render_Advanced_Employee_Table(this.employees);
+      }
+    });
 
     this.render_Basic_Employee_Table(this.employees);
     this.render_Advanced_Employee_Table(this.employees);
@@ -150,17 +161,17 @@ export default class SubMain {
         this.id = null;
         DOM.suc_message.textContent = 'Record Updated Successfully';
         DOM.suc_message.classList.add('succ-up-Msg');
-        DOM.suc_message.style.display = 'block';
+        DOM.suc_message.style.visibility='visible';
         setTimeout(() => {
-          DOM.suc_message.style.display = 'none';
+          DOM.suc_message.style.visibility='hidden';
         }, 2000);
       } else {
         this.employees.push(employeeData);
         DOM.suc_message.textContent = 'Record Added Successfully';
         DOM.suc_message.classList.add('succ-up-Msg');
-        DOM.suc_message.style.display = 'block';
+        DOM.suc_message.style.visibility='visible';
         setTimeout(() => {
-          DOM.suc_message.style.display = 'none';
+          DOM.suc_message.style.visibility='hidden';
         }, 2000);
       }
 
@@ -221,14 +232,14 @@ export default class SubMain {
 
       del_btn.addEventListener('click', () => {
         this.employees.splice(id, 1);
-        if (this.employees.length == 0) {
-          DOM.form.reset();
-        }
+        DOM.form.reset();
+        DOM.cancelBtn.style.display = 'none';
+        DOM.submitBtn.textContent = 'Submit';
         DOM.del_message.textContent = 'Record Deleted Successfully';
         DOM.del_message.classList.add('del-Msg');
-        DOM.del_message.style.display = 'block';
+        DOM.del_message.style.visibility='visible';
         setTimeout(() => {
-          DOM.del_message.style.display = 'none';
+          DOM.del_message.style.visibility = 'hidden';
         }, 2000);
 
         this.saveToStorage();
@@ -347,14 +358,14 @@ export default class SubMain {
 
       del_btn.addEventListener('click', () => {
         this.employees.splice(id, 1);
-        if (this.employees.length == 0) {
-          DOM.form.reset();
-        }
+        DOM.form.reset();
+        DOM.cancelBtn.style.display = 'none';
+        DOM.submitBtn.textContent = 'Submit';
         DOM.del_message.textContent = 'Record Deleted Successfully';
         DOM.del_message.classList.add('del-Msg');
-        DOM.del_message.style.display = 'block';
+        DOM.del_message.style.visibility='visible';
         setTimeout(() => {
-          DOM.del_message.style.display = 'none';
+          DOM.del_message.style.visibility = 'hidden';
         }, 2000);
         this.saveToStorage(data);
         this.render_Advanced_Employee_Table(this.employees);
