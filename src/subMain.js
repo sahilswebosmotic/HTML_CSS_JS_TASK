@@ -1,12 +1,4 @@
-import {
-  toggleViewsVisibility,
-  formatDOB,
-  showError,
-  hideError,
-  getFormData,
-  setMaxDOB,
-} from './Utils.js';
-
+import { toggleViewsVisibility, formatDOB, showError, hideError, getFormData, setMaxDOB } from './Utils.js';
 
 const STORAGE_KEY = 'usersPrefs';
 
@@ -18,6 +10,8 @@ const DOM = {
   form: document.getElementById('employeeForm'),
   submitBtn: document.getElementById('submit-btn'),
   cancelBtn: document.getElementById('cancel-btn'),
+  suc_message: document.getElementById('succ-up-message'),
+  del_message: document.getElementById('del-message'),
 
   inputs: {
     name: document.getElementById('name'),
@@ -34,6 +28,11 @@ const DOM = {
     advance: document.querySelector('.advance-view'),
     basicTable: document.querySelector('.basic-view-table'),
     advanceTable: document.querySelector('.advance-view-table'),
+    secHead: document.querySelectorAll('.view-section-heading'),
+    basicViewSec: document.querySelector('.basic-view-sec'),
+    basicViewSecHead: document.querySelector('.basic-view-sec-head'),
+    advanceViewSec: document.querySelector('.advance-view-sec'),
+    advanceViewSecHead: document.querySelector('.advance-view-sec-head'),
   },
 };
 
@@ -49,7 +48,6 @@ export default class SubMain {
     this.render_Advanced_Employee_Table(this.employees);
   }
 
-
   loadFromStorage() {
     const data = localStorage.getItem(STORAGE_KEY);
     if (data) {
@@ -63,8 +61,6 @@ export default class SubMain {
   saveToStorage() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this.employees));
   }
-
-
 
   LiveValidation() {
     DOM.inputs.name.addEventListener('input', () => {
@@ -80,14 +76,13 @@ export default class SubMain {
       const selectedDate = new Date(value);
       const today = new Date();
       const tommorow = new Date(today);
-      tommorow.setDate(today.getDate()+1);
+      tommorow.setDate(today.getDate() + 1);
       tommorow.setHours(0, 0, 0, 0);
 
-      if (!isNaN(selectedDate) && selectedDate <= tommorow ) {
+      if (!isNaN(selectedDate) && selectedDate <= tommorow) {
         hideError(dateError);
       }
     });
-
 
     DOM.inputs.email.addEventListener('input', () => {
       if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(DOM.inputs.email.value)) {
@@ -96,17 +91,11 @@ export default class SubMain {
     });
 
     DOM.inputs.phone.addEventListener('input', () => {
-      if (
-        !DOM.inputs.phone.value ||
-        DOM.inputs.phone.value.length === 10
-      ) {
+      if (!DOM.inputs.phone.value || DOM.inputs.phone.value.length === 10) {
         hideError(phoneError);
       }
     });
-
   }
-
-
 
   formHandler() {
     const form = document.getElementById('employeeForm');
@@ -119,40 +108,34 @@ export default class SubMain {
       const employeeData = getFormData(DOM.inputs, GENDER);
       const errors = {};
 
-
       if (employeeData.name.length < 4 || employeeData.name.length > 20) {
-        errors.name = "* Name Should contain character between 4 to 20";
+        errors.name = '* Name Should contain character between 4 to 20';
       }
 
-
-
       if (!employeeData.dob) {
-        errors.dob = "* DOB is required";
+        errors.dob = '* DOB is required';
       } else {
         const selectedDate = new Date(employeeData.dob);
         const today = new Date();
         const tommorow = new Date(today);
-        tommorow.setDate(today.getDate()+1);
-        tommorow.setHours(0,0,0,0);
+        tommorow.setDate(today.getDate() + 1);
+        tommorow.setHours(0, 0, 0, 0);
         if (isNaN(selectedDate.getTime())) {
-          errors.dob = "* Invalid date";
+          errors.dob = '* Invalid date';
         } else if (selectedDate > tommorow) {
-          errors.dob = "* Future dates are not allowed";
+          errors.dob = '* Future dates are not allowed';
         }
       }
-
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       if (!emailRegex.test(employeeData.email)) {
-        errors.email = "* Enter a Valid Email";
+        errors.email = '* Enter a Valid Email';
       }
-
 
       if (employeeData.phone && employeeData.phone.length !== 10) {
-        errors.phone = "* Enter a valid 10 digit number";
+        errors.phone = '* Enter a valid 10 digit number';
       }
-
 
       if (Object.keys(errors).length > 0) {
         if (errors.name) showError(nameError, errors.name);
@@ -165,8 +148,20 @@ export default class SubMain {
       if (this.id !== null) {
         this.employees[this.id] = employeeData;
         this.id = null;
+        DOM.suc_message.textContent = 'Record Updated Successfully';
+        DOM.suc_message.classList.add('succ-up-Msg');
+        DOM.suc_message.style.display = 'block';
+        setTimeout(() => {
+          DOM.suc_message.style.display = 'none';
+        }, 2000);
       } else {
         this.employees.push(employeeData);
+        DOM.suc_message.textContent = 'Record Added Successfully';
+        DOM.suc_message.classList.add('succ-up-Msg');
+        DOM.suc_message.style.display = 'block';
+        setTimeout(() => {
+          DOM.suc_message.style.display = 'none';
+        }, 2000);
       }
 
       this.saveToStorage();
@@ -177,7 +172,6 @@ export default class SubMain {
       this.id = null;
     });
   }
-
 
   // basic view
   render_Basic_Employee_Table(data) {
@@ -208,14 +202,15 @@ export default class SubMain {
 
     data.forEach((emp, id) => {
       const row = document.createElement('tr');
-      [emp.name, emp.gender, formatDOB(emp.dob), emp.email, emp.phone, emp.hobbies.join(',  ')].forEach(
-        (value) => {
-          const td = document.createElement('td');
-          td.innerText = value;
-          td.classList.add('basic-view-data');
-          row.appendChild(td);
+      [emp.name, emp.gender, formatDOB(emp.dob), emp.email, emp.phone, emp.hobbies.join(',  ')].forEach((value) => {
+        const td = document.createElement('td');
+        td.innerText = value;
+        if (!value) {
+          td.innerText = ' - ';
         }
-      );
+        td.classList.add('basic-view-data');
+        row.appendChild(td);
+      });
 
       const td = document.createElement('td');
       td.classList.add('basic-view-action-data');
@@ -226,11 +221,20 @@ export default class SubMain {
 
       del_btn.addEventListener('click', () => {
         this.employees.splice(id, 1);
+        if (this.employees.length == 0) {
+          DOM.form.reset();
+        }
+        DOM.del_message.textContent = 'Record Deleted Successfully';
+        DOM.del_message.classList.add('del-Msg');
+        DOM.del_message.style.display = 'block';
+        setTimeout(() => {
+          DOM.del_message.style.display = 'none';
+        }, 2000);
+
         this.saveToStorage();
         this.render_Advanced_Employee_Table(this.employees);
         this.render_Basic_Employee_Table(this.employees);
       });
-
 
       const up_btn = document.createElement('button');
       up_btn.textContent = 'UPDATE';
@@ -245,26 +249,25 @@ export default class SubMain {
         DOM.inputs.male.checked = emp.gender === GENDER.MALE;
         DOM.inputs.female.checked = emp.gender === GENDER.FEMALE;
 
-
-        DOM.inputs.hobbies.forEach(h => {
+        DOM.inputs.hobbies.forEach((h) => {
           h.checked = emp.hobbies.includes(h.value);
         });
 
         DOM.submitBtn.textContent = 'Update';
         DOM.cancelBtn.style.display = 'block';
-        DOM.cancelBtn.onclick = () => {
+        DOM.cancelBtn.addEventListener('click', () => {
           DOM.form.reset();
           this.id = null;
           DOM.cancelBtn.style.display = 'none';
           DOM.submitBtn.textContent = 'Submit';
-        }
+        });
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
         });
       });
-
-
+      DOM.submitBtn.textContent = 'Submit';
+      DOM.cancelBtn.style.display = 'none';
 
       td.appendChild(del_btn);
       td.appendChild(up_btn);
@@ -272,7 +275,6 @@ export default class SubMain {
 
       tbody.appendChild(row);
     });
-
 
     const thaction = document.createElement('th');
     thaction.innerText = 'Action';
@@ -311,13 +313,19 @@ export default class SubMain {
       data.forEach((emp) => {
         const td = document.createElement('td');
         td.classList.add('advance-view-data');
-        if (header.key == 'dob') {
-          td.innerText = formatDOB(emp[header.key]);
-        } else if (header.key == 'hobbies') {
-          td.innerText = emp[header.key].join(',  ');
-        } else {
-          td.innerText = emp[header.key];
+
+        let value = emp[header.key];
+
+        if (header.key === 'dob') {
+          value = formatDOB(value);
         }
+
+        if (header.key === 'hobbies') {
+          value = value.length ? value.join(', ') : '';
+        }
+
+        td.innerText = value ? value : ' - ';
+
         row.appendChild(td);
       });
 
@@ -339,6 +347,15 @@ export default class SubMain {
 
       del_btn.addEventListener('click', () => {
         this.employees.splice(id, 1);
+        if (this.employees.length == 0) {
+          DOM.form.reset();
+        }
+        DOM.del_message.textContent = 'Record Deleted Successfully';
+        DOM.del_message.classList.add('del-Msg');
+        DOM.del_message.style.display = 'block';
+        setTimeout(() => {
+          DOM.del_message.style.display = 'none';
+        }, 2000);
         this.saveToStorage(data);
         this.render_Advanced_Employee_Table(this.employees);
         this.render_Basic_Employee_Table(this.employees);
@@ -357,24 +374,25 @@ export default class SubMain {
         DOM.inputs.male.checked = emp.gender === GENDER.MALE;
         DOM.inputs.female.checked = emp.gender === GENDER.FEMALE;
 
-
-        DOM.inputs.hobbies.forEach(h => {
+        DOM.inputs.hobbies.forEach((h) => {
           h.checked = emp.hobbies.includes(h.value);
         });
 
         DOM.submitBtn.textContent = 'Update';
         DOM.cancelBtn.style.display = 'block';
-        DOM.cancelBtn.onclick = () => {
+        DOM.cancelBtn.addEventListener('click', () => {
           DOM.form.reset();
           this.id = null;
           DOM.cancelBtn.style.display = 'none';
           DOM.submitBtn.textContent = 'Submit';
-        }
+        });
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
         });
       });
+      DOM.submitBtn.textContent = 'Submit';
+      DOM.cancelBtn.style.display = 'none';
 
       td.appendChild(del_btn);
       td.appendChild(up_btn);

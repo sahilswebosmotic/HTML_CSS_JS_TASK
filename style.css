@@ -32,11 +32,19 @@
   flex-direction: column;
 }
 
-.section-headind {
+.employee-section-heading{
   text-align: center;
   margin-bottom: 0.25rem;
   font-size: 2rem;
   font-weight: 400;
+}
+
+.view-section-heading{
+  text-align: center;
+  margin-bottom: 0.25rem;
+  font-size: 2rem;
+  font-weight: 400;
+  display: none;
 }
 
 .employee-form-sec {
@@ -146,14 +154,16 @@ input[name="gender"] {
 .advance-view-sec {
   border: 2px solid var(--color-primary);
   border-radius: 6px;
+  display: none;
 }
 
 /* Basic and Advance view  */
-#basic-view-sec-head,
-#advance-view-sec-head {
+.basic-view-sec-head,
+.advance-view-sec-head {
   padding: 0.75rem 1rem;
   background-color: var(--color-primary);
   color: var(--color-white);
+  display: none;  
 }
 
 .basic-view-table,
@@ -225,8 +235,6 @@ input[name="gender"] {
 
 
 .error-Msg {
-  /* display: inline-block; */
-  /* justify-self: center; */
   padding: 0rem 0.5rem;
   margin-bottom:0.5rem;
   border-radius: 4px;
@@ -234,6 +242,17 @@ input[name="gender"] {
   color: var(--color-danger);
 }
 
+.succ-up-Msg{
+  color: var(--color-success);
+  font-size: 18px;
+  margin: auto;
+}
+
+.del-Msg{
+  color: var(--color-danger);
+  font-size: 18px;
+  margin: auto;
+}
 
 @media (max-width: 1024px) {
   .Employee,
